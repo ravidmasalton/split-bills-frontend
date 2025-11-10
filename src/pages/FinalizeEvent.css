@@ -1,0 +1,185 @@
+.finalize-form {
+  padding: 20px 0;
+}
+
+.finalize-form p {
+  margin-bottom: 20px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.finalize-btn-action {
+  width: 100%;
+  padding: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.finalize-btn-action:hover {
+  background-color: #0056b3;
+}
+
+.finalize-btn-action:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Summary Content */
+.summary-content {
+  padding: 10px 0;
+}
+
+.summary-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #eee;
+}
+
+.summary-header h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.total-amount {
+  font-size: 18px;
+  color: #28a745;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Balances Section */
+.balances-section {
+  margin-bottom: 30px;
+}
+
+.balances-section h4 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.balances-list {
+  display: grid;
+  gap: 10px;
+}
+
+.balance-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.balance-item.positive {
+  border-right: 4px solid #28a745;
+}
+
+.balance-item.negative {
+  border-right: 4px solid #dc3545;
+}
+
+.member-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.balance-amount {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.balance-item.positive .balance-amount {
+  color: #28a745;
+}
+
+.balance-item.negative .balance-amount {
+  color: #dc3545;
+}
+
+/* Payments Section */
+.payments-section {
+  margin-bottom: 20px;
+}
+
+.payments-section h4 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.all-settled {
+  text-align: center;
+  padding: 30px;
+  font-size: 18px;
+  color: #28a745;
+  background-color: #d4edda;
+  border-radius: 8px;
+}
+
+.payments-list {
+  display: grid;
+  gap: 15px;
+}
+
+.payment-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  color: white;
+}
+
+.payment-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.from-user, .to-user {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.arrow {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.payment-amount {
+  font-size: 20px;
+  font-weight: 700;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.close-summary-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.close-summary-btn:hover {
+  background-color: #5a6268;
+}
