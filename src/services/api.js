@@ -34,7 +34,7 @@ export const eventsAPI = {
   addExpense: (eventId, expenseData) => api.post(`/events/${eventId}/expenses`, expenseData),
   updateExpense: (eventId, expenseIndex, expenseData) => api.put(`/events/${eventId}/expenses/${expenseIndex}`, expenseData),
   deleteExpense: (eventId, expenseIndex) => api.delete(`/events/${eventId}/expenses/${expenseIndex}`),
+  deleteEvent: (eventId) => api.delete(`/events/${eventId}`),  // הוסף את זה!
   finalizeEvent: (eventId, currency) => api.post(`/events/${eventId}/finalize?final_currency=${currency}`),
 };
-
 export default api;

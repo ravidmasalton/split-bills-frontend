@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Plus, X, UserPlus } from 'lucide-react';
 import { eventsAPI, authAPI } from '../services/api';
 import './CreateEvent.css';
 
@@ -7,6 +8,9 @@ const CreateEvent = ({ onEventCreated }) => {
   const [eventName, setEventName] = useState('');
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -21,13 +25,39 @@ const CreateEvent = ({ onEventCreated }) => {
     }
   };
 
-  // Toggle user selection
-  const toggleMember = (user) => {
-    if (selectedMembers.find(m => m.user_id === user.id)) {
-      setSelectedMembers(selectedMembers.filter(m => m.user_id !== user.id));
-    } else {
-      setSelectedMembers([...selectedMembers, { user_id: user.id, email: user.email }]);
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim() === '') {
+      setFilteredUsers([]);
+      setShowSuggestions(false);
+      return;
     }
+
+    // Filter users based on search query (email or name)
+    const filtered = allUsers.filter(user => 
+      (user.email.toLowerCase().includes(query.toLowerCase()) ||
+       user.name.toLowerCase().includes(query.toLowerCase())) &&
+      !selectedMembers.find(m => m.user_id === user.id)
+    );
+
+    setFilteredUsers(filtered);
+    setShowSuggestions(filtered.length > 0);
+  };
+
+  // Add member from suggestions
+  const addMember = (user) => {
+    setSelectedMembers([...selectedMembers, { user_id: user.id, email: user.email, name: user.name }]);
+    setSearchQuery('');
+    setFilteredUsers([]);
+    setShowSuggestions(false);
+  };
+
+  // Remove member
+  const removeMember = (userId) => {
+    setSelectedMembers(selectedMembers.filter(m => m.user_id !== userId));
   };
 
   // Create event
@@ -35,7 +65,7 @@ const CreateEvent = ({ onEventCreated }) => {
     e.preventDefault();
     
     if (selectedMembers.length === 0) {
-      setError('Please select at least one member');
+      setError('Please add at least one member');
       return;
     }
 
@@ -45,12 +75,13 @@ const CreateEvent = ({ onEventCreated }) => {
     try {
       await eventsAPI.createEvent({
         name: eventName,
-        members: selectedMembers
+        members: selectedMembers.map(m => ({ email: m.email }))
       });
       
       // Reset form
       setEventName('');
       setSelectedMembers([]);
+      setSearchQuery('');
       setShowModal(false);
       
       // Notify parent to refresh events
@@ -62,18 +93,27 @@ const CreateEvent = ({ onEventCreated }) => {
     }
   };
 
+  // Close modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEventName('');
+    setSelectedMembers([]);
+    setSearchQuery('');
+    setError('');
+  };
+
   return (
     <>
       <button onClick={handleOpenModal} className="create-event-btn">
-        + Create New Event
+        <Plus size={20} /> Create New Event
       </button>
 
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+        <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Create New Event</h2>
-              <button onClick={() => setShowModal(false)} className="close-btn">×</button>
+              <button onClick={handleCloseModal} className="close-btn"><X size={24} /></button>
             </div>
 
             {error && <div className="error-message">{error}</div>}
@@ -91,29 +131,60 @@ const CreateEvent = ({ onEventCreated }) => {
                 />
               </div>
 
-              {/* Members selection */}
+              {/* Member search */}
               <div className="form-group">
-                <label>Select Members</label>
-                <div className="members-list">
-                  {allUsers.map(user => (
-                    <div key={user.id} className="member-item">
-                      <input
-                        type="checkbox"
-                        id={user.id}
-                        checked={selectedMembers.some(m => m.user_id === user.id)}
-                        onChange={() => toggleMember(user)}
-                      />
-                      <label htmlFor={user.id}>
-                        {user.name} ({user.email})
-                      </label>
+                <label>Add Members</label>
+                <div className="search-container">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    onFocus={() => searchQuery && setShowSuggestions(true)}
+                    placeholder="Search by email or name..."
+                    className="search-input"
+                  />
+                  
+                  {/* Suggestions dropdown */}
+                  {showSuggestions && filteredUsers.length > 0 && (
+                    <div className="suggestions-dropdown">
+                      {filteredUsers.slice(0, 5).map(user => (
+                        <div 
+                          key={user.id} 
+                          className="suggestion-item"
+                          onClick={() => addMember(user)}
+                        >
+                          <div className="suggestion-info">
+                            <strong>{user.name}</strong>
+                            <span className="suggestion-email">{user.email}</span>
+                          </div>
+                          <button type="button" className="add-btn"><UserPlus size={18} /></button>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
 
-              <div className="selected-count">
-                Selected: {selectedMembers.length} member(s)
-              </div>
+              {/* Selected members */}
+              {selectedMembers.length > 0 && (
+                <div className="selected-members">
+                  <label>Selected Members ({selectedMembers.length})</label>
+                  <div className="members-chips">
+                    {selectedMembers.map(member => (
+                      <div key={member.user_id} className="member-chip">
+                        <span>{member.name || member.email}</span>
+                        <button 
+                          type="button"
+                          onClick={() => removeMember(member.user_id)}
+                          className="remove-chip-btn"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <button type="submit" disabled={loading} className="submit-btn">
                 {loading ? 'Creating...' : 'Create Event'}

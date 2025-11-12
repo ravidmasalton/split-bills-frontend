@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Edit3, Trash2, Eye, Plus } from 'lucide-react';
 import { eventsAPI, authAPI } from '../services/api';
 import AddExpense from './AddExpense';
 import FinalizeEvent from './FinalizeEvent';
+import ExpenseDetails from './ExpenseDetails';
 import './EventDetails.css';
 
 const EventDetails = () => {
@@ -17,6 +19,7 @@ const EventDetails = () => {
   const [showFinalize, setShowFinalize] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
   const [editingExpenseIndex, setEditingExpenseIndex] = useState(null);
+  const [selectedExpense, setSelectedExpense] = useState(null);
 
   // Fetch all users for displaying names
   const fetchUsers = async () => {
@@ -74,7 +77,9 @@ const EventDetails = () => {
   };
 
   // Handle delete expense
-  const handleDeleteExpense = async (index) => {
+  const handleDeleteExpense = async (index, e) => {
+    e.stopPropagation(); // Prevent opening details modal
+    
     if (!window.confirm('Are you sure you want to delete this expense?')) {
       return;
     }
@@ -89,10 +94,31 @@ const EventDetails = () => {
   };
 
   // Handle edit expense
-  const handleEditExpense = (expense, index) => {
+  const handleEditExpense = (expense, index, e) => {
+    e.stopPropagation(); // Prevent opening details modal
+    
     setEditingExpense(expense);
     setEditingExpenseIndex(index);
     setShowAddExpense(true);
+  };
+
+  // Handle delete event
+  const handleDeleteEvent = async () => {
+    if (!window.confirm(`Are you sure you want to delete "${event.name}"? This will delete all expenses and cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await eventsAPI.deleteEvent(eventId);
+      navigate('/events');
+    } catch (err) {
+      console.error('Error deleting event:', err);
+      if (err.response?.status === 403) {
+        alert('Only the creator can delete this event');
+      } else {
+        alert('Failed to delete event');
+      }
+    }
   };
 
   if (loading) {
@@ -117,7 +143,7 @@ const EventDetails = () => {
       {/* Header */}
       <div className="event-header">
         <button onClick={() => navigate('/events')} className="back-btn">
-          ← Back to Events
+          <ArrowLeft size={18} /> Back to Events
         </button>
         <h1>{event.name}</h1>
       </div>
@@ -150,10 +176,13 @@ const EventDetails = () => {
           setEditingExpenseIndex(null);
           setShowAddExpense(true);
         }} className="add-expense-btn">
-          + Add Expense
+          <Plus size={20} /> Add Expense
         </button>
         <button onClick={() => setShowFinalize(true)} className="finalize-btn">
           Finalize Event
+        </button>
+        <button onClick={handleDeleteEvent} className="delete-event-btn">
+          <Trash2 size={18} /> Delete Event
         </button>
       </div>
 
@@ -168,7 +197,11 @@ const EventDetails = () => {
         ) : (
           <div className="expenses-list">
             {event.expenses.map((expense, index) => (
-              <div key={index} className="expense-card">
+              <div 
+                key={index} 
+                className="expense-card clickable"
+                onClick={() => setSelectedExpense(expense)}
+              >
                 <div className="expense-header">
                   <h4>{expense.note || 'Expense'}</h4>
                   <div className="expense-actions">
@@ -176,18 +209,18 @@ const EventDetails = () => {
                       {expense.currency} {expense.amount.toFixed(2)}
                     </span>
                     <button 
-                      onClick={() => handleEditExpense(expense, index)}
+                      onClick={(e) => handleEditExpense(expense, index, e)}
                       className="edit-btn"
                       title="Edit expense"
                     >
-                      ✏️
+                      <Edit3 size={18} />
                     </button>
                     <button 
-                      onClick={() => handleDeleteExpense(index)}
+                      onClick={(e) => handleDeleteExpense(index, e)}
                       className="delete-btn"
                       title="Delete expense"
                     >
-                      🗑️
+                      <Trash2 size={18} />
                     </button>
                   </div>
                 </div>
@@ -235,6 +268,15 @@ const EventDetails = () => {
         <FinalizeEvent
           event={event}
           onClose={() => setShowFinalize(false)}
+        />
+      )}
+
+      {/* Expense Details Modal */}
+      {selectedExpense && (
+        <ExpenseDetails
+          expense={selectedExpense}
+          event={event}
+          onClose={() => setSelectedExpense(null)}
         />
       )}
     </div>

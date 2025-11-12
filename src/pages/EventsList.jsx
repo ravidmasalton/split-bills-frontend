@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { eventsAPI } from '../services/api';
 import CreateEvent from './CreateEvent';
@@ -61,7 +62,7 @@ const EventsList = () => {
           <p className="welcome-text">Welcome, {user?.name}!</p>
         </div>
         <button onClick={handleLogout} className="logout-btn">
-          Logout
+          <LogOut size={18} /> Logout
         </button>
       </div>
 

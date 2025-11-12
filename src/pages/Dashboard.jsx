@@ -1,3 +1,4 @@
+import { LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
@@ -17,7 +18,7 @@ const Dashboard = () => {
       <div className="dashboard-header">
         <h1>Welcome, {user?.name}!</h1>
         <button onClick={handleLogout} className="logout-btn">
-          Logout
+          <LogOut size={18} /> Logout
         </button>
       </div>
 

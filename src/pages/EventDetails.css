@@ -1,3 +1,61 @@
+/* EventDetails.css — Updated for prominence of balances, color coding, and clear sections */
+
+:root{
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --text: #0f1724;
+  --muted: #64748b;
+  --primary: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --glass: rgba(15,23,36,0.04);
+  --radius: 10px;
+  --transition:180ms cubic-bezier(.2,.8,.2,1);
+}
+
+.event-details{ background:var(--bg); padding:18px; border-radius:12px; }
+.event-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+.event-title{ font-size:1.25rem; font-weight:800; color:var(--text); }
+.event-meta{ color:var(--muted); font-size:0.95rem; }
+
+.sections{ display:grid; grid-template-columns: 1fr 360px; gap:18px; }
+
+.main-section{ background:var(--surface); padding:14px; border-radius:12px; box-shadow:0 8px 24px rgba(2,6,23,0.04); border:1px solid var(--glass); }
+.side-panel{ background:var(--surface); padding:14px; border-radius:12px; border:1px solid var(--glass); box-shadow:var(--shadow-md); }
+
+/* Members grid: prominent balances */
+.members-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap:12px; }
+.member-card{ background:linear-gradient(180deg,#fff, #fbfdff); padding:12px; border-radius:10px; display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid var(--glass); box-shadow:0 6px 18px rgba(2,6,23,0.03); transition:transform var(--transition); }
+.member-card:hover{ transform:translateY(-4px); }
+.member-left{ display:flex; gap:10px; align-items:center; }
+.member-avatar{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--primary); background:rgba(37,99,235,0.06); }
+.member-name{ font-weight:700; font-size:0.98rem; color:var(--text); }
+.member-sub{ font-size:0.86rem; color:var(--muted); }
+
+.member-balance{ text-align:left; min-width:110px; }
+.balance-amount{ font-size:1.05rem; font-weight:900; }
+.balance-amount.credit{ color:var(--success); } /* owed to them */
+.balance-amount.debt{ color:var(--danger); } /* owes */
+.balance-label{ font-size:0.82rem; color:var(--muted); margin-top:4px; }
+
+/* Clear visual separation */
+.section-sep{ height:1px; background:linear-gradient(90deg, transparent, rgba(2,6,23,0.04), transparent); margin:14px 0; }
+
+/* Transaction list */
+.tx-list{ display:flex; flex-direction:column; gap:8px; }
+.tx-item{ background: #fff; border-radius:8px; padding:10px; display:flex; justify-content:space-between; gap:10px; border:1px solid var(--glass); }
+.tx-meta{ color:var(--muted); font-size:0.9rem; }
+.tx-amount{ font-weight:800; color:var(--text); }
+.tx-amount.positive{ color:var(--success); }
+.tx-amount.negative{ color:var(--danger); }
+
+/* Responsive */
+@media (max-width:980px){
+  .sections{ grid-template-columns:1fr; }
+}
+
+/* Tooling hints for JS: use .balance-amount.credit/.debt for dynamic coloring; .member-card data attributes for hover info */
+
 .event-details-container {
   min-height: 100vh;
   background-color: #f5f5f5;
@@ -11,6 +69,10 @@
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 
 .back-btn {
@@ -20,8 +82,10 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 15px;
   transition: background-color 0.3s;
+  position: absolute;
+  left: 30px;
+  top: 20px;
 }
 
 .back-btn:hover {
@@ -31,6 +95,7 @@
 .event-header h1 {
   margin: 0;
   color: #333;
+  text-align: center;
 }
 
 /* Event Info Section */
@@ -91,6 +156,9 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .add-expense-btn:hover {
@@ -210,19 +278,24 @@
 .edit-btn, .delete-btn {
   background: none;
   border: none;
-  font-size: 20px;
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 8px;
   border-radius: 4px;
   transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
 }
 
 .edit-btn:hover {
   background-color: rgba(102, 126, 234, 0.1);
+  color: #667eea;
 }
 
 .delete-btn:hover {
   background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
 }
 
 .expense-header {
@@ -230,4 +303,36 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+}
+
+
+.expense-card.clickable {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.expense-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+
+.delete-event-btn {
+  padding: 12px 24px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delete-event-btn:hover {
+  background-color: #c82333;
 }

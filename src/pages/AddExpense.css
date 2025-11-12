@@ -1,6 +1,148 @@
+
+/* AddExpense.css — Updated: consistent minimalist UI, accessible table, running totals styles */
+
+:root{
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --text: #0f1724;
+  --muted: #64748b;
+  --primary: #2563eb; /* blue */
+  --accent: #06b6d4; /* teal */
+  --success: #16a34a; /* green */
+  --danger: #dc2626; /* red */
+  --glass: rgba(15,23,36,0.04);
+  --shadow-sm: 0 1px 2px rgba(2,6,23,0.06);
+  --shadow-md: 0 6px 18px rgba(15,23,36,0.08);
+  --radius: 10px;
+  --transition: 180ms cubic-bezier(.2,.8,.2,1);
+}
+
+.add-expense-modal{
+  background: linear-gradient(180deg, var(--surface), #fbfdff);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 20px;
+  max-width: 920px;
+  width: 100%;
+  margin: 12px auto;
+  color: var(--text);
+  border: 1px solid var(--glass);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.add-expense-modal:hover{ transform: translateY(-2px); box-shadow: 0 12px 30px rgba(2,6,23,0.09); }
+
+.add-expense-header{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin-bottom: 12px;
+}
+.add-expense-header h3{ font-size:1.125rem; margin:0; letter-spacing: -0.2px; }
+.add-expense-actions{ display:flex; gap:8px; align-items:center; }
+
+.expense-form{
+  display:flex; flex-direction:column; gap:12px;
+}
+
+.expense-row{ display:flex; gap:12px; align-items:center; }
+.expense-row .field{ flex:1; }
+
+/* Inputs and buttons — larger, more touch-friendly */
+input[type="text"], input[type="number"], select, textarea{
+  width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(2,6,23,0.06);
+  background: #fff; font-size:0.98rem; color:var(--text);
+  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+}
+input:focus, select:focus, textarea:focus{ outline:none; box-shadow:0 6px 18px rgba(37,99,235,0.08); border-color:var(--primary); transform:translateY(-1px); }
+
+.btn{ display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border-radius:8px; cursor:pointer; border:none; font-weight:600; transition:all var(--transition); }
+.btn-primary{ background:var(--primary); color:#fff; box-shadow:0 8px 20px rgba(37,99,235,0.12); }
+.btn-ghost{ background:transparent; color:var(--primary); border:1px solid rgba(37,99,235,0.12); }
+.btn:active{ transform:translateY(1px); }
+
+/* Expense table */
+.expense-table{ width:100%; border-collapse:collapse; margin-top:6px; font-size:0.95rem; }
+.expense-table thead th{ text-align:left; font-size:0.85rem; text-transform:uppercase; color:var(--muted); letter-spacing:0.6px; padding:10px 12px; }
+.expense-table tbody td{ padding:12px; vertical-align:middle; border-bottom:1px solid rgba(2,6,23,0.04); }
+.expense-table tbody tr:nth-child(even){ background:rgba(2,6,23,0.02); }
+
+.person-cell{ display:flex; gap:10px; align-items:center; }
+.avatar{ width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--glass),#fff); display:inline-flex; align-items:center; justify-content:center; color:var(--primary); font-weight:700; box-shadow:var(--shadow-sm); }
+.person-name{ font-weight:600; color:var(--text); }
+.person-sub{ font-size:0.85rem; color:var(--muted); }
+
+/* Badges: payer vs responsible */
+.badge{ padding:6px 8px; border-radius:999px; font-weight:700; font-size:0.82rem; display:inline-flex; align-items:center; gap:8px; }
+.badge.paid{ background:linear-gradient(90deg, rgba(22,163,74,0.08), rgba(22,163,74,0.02)); color:var(--success); border:1px solid rgba(22,163,74,0.12); }
+.badge.resp{ background:linear-gradient(90deg, rgba(220,38,38,0.06), rgba(220,38,38,0.02)); color:var(--danger); border:1px solid rgba(220,38,38,0.08); }
+
+/* Inputs inside table */
+.expense-table input[type="number"]{ width:120px; text-align:left; font-weight:600; padding-left:14px; }
+.expense-table input[type="checkbox"]{ transform:scale(1.08); }
+
+/* Running totals block */
+.running-totals{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:14px; }
+.running-totals .total{ background:var(--surface); padding:10px 14px; border-radius:10px; box-shadow:var(--shadow-sm); border:1px solid var(--glass); min-width:160px; }
+.running-totals .label{ font-size:0.82rem; color:var(--muted); }
+.running-totals .value{ font-size:1.05rem; font-weight:800; margin-top:4px; }
+.running-totals .value.positive{ color:var(--success); }
+.running-totals .value.negative{ color:var(--danger); }
+
+/* Totals row highlight */
+.expense-table tfoot tr{ background:linear-gradient(90deg, rgba(37,99,235,0.03), rgba(6,182,212,0.02)); font-weight:700; }
+.expense-table tfoot td{ padding:12px; border-top:2px solid rgba(2,6,23,0.06); }
+
+/* Required field indicator */
+.required::after{ content:"*"; color:var(--danger); margin-left:6px; font-weight:700; }
+
+/* Tooltips */
+.hint{ font-size:0.82rem; color:var(--muted); }
+.tooltip{ position:relative; cursor:help; }
+.tooltip:hover::after{ content:attr(data-tip); position:absolute; left:0; top:calc(100% + 8px); background:#0f1724; color:#fff; padding:8px 10px; border-radius:8px; font-size:0.85rem; white-space:nowrap; box-shadow:var(--shadow-md); }
+
+/* Responsive */
+@media (max-width:880px){
+  .expense-row{ flex-direction:column; align-items:stretch; }
+  .expense-table thead{ display:none; }
+  .expense-table tbody td{ display:block; padding:10px 12px; }
+  .expense-table tbody tr{ margin-bottom:10px; display:block; border-radius:8px; overflow:hidden; }
+}
+
+/* Accessibility: focus ring for keyboard users */
+.btn:focus, input:focus{ box-shadow:0 8px 22px rgba(37,99,235,0.12); }
+
+
 .modal-content.large {
   max-width: 800px;
   max-height: 90vh;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.close-btn:hover {
+  color: #333;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .form-row {
@@ -68,7 +210,7 @@
 .participants-table th {
   background-color: #f8f9fa;
   padding: 12px;
-  text-align: right;
+  text-align: left;
   font-weight: 600;
   color: #333;
   border-bottom: 2px solid #ddd;

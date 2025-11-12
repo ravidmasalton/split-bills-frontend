@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { X, CheckCircle, Calculator } from 'lucide-react';
 import { eventsAPI, authAPI } from '../services/api';
 import './FinalizeEvent.css';
 
@@ -59,7 +60,7 @@ const FinalizeEvent = ({ event, onClose }) => {
       <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Finalize Event: {event.name}</h2>
-          <button onClick={onClose} className="close-btn">×</button>
+          <button onClick={onClose} className="close-btn"><X size={24} /></button>
         </div>
 
         {error && <div className="error-message">{error}</div>}
@@ -84,6 +85,7 @@ const FinalizeEvent = ({ event, onClose }) => {
               disabled={loading}
               className="finalize-btn-action"
             >
+              <Calculator size={20} />
               {loading ? 'Calculating...' : 'Calculate Final Balances'}
             </button>
           </div>
@@ -120,17 +122,17 @@ const FinalizeEvent = ({ event, onClose }) => {
               ) : (
                 <div className="payments-list">
                   {summary.payments_needed.map((payment, index) => (
-                    <div key={index} className="payment-card">
-                      <div className="payment-info">
-                        <span className="from-user">{getUserName(payment.from_user_id)}</span>
-                        <span className="arrow">→</span>
-                        <span className="to-user">{getUserName(payment.to_user_id)}</span>
-                      </div>
-                      <div className="payment-amount">
-                        {payment.currency} {payment.amount.toFixed(2)}
-                      </div>
+                  <div key={index} className="payment-card">
+                    <div className="payment-info">
+                      <span className="from-user">{getUserName(payment.from_user_id)}</span>
+                      <span className="owes-text"> owes </span>
+                      <span className="to-user">{getUserName(payment.to_user_id)}</span>
                     </div>
-                  ))}
+                    <div className="payment-amount">
+                      {payment.currency} {payment.amount.toFixed(2)}
+                    </div>
+                  </div>
+                ))}
                 </div>
               )}
             </div>

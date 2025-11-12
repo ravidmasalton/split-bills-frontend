@@ -8,6 +8,9 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .create-event-btn:hover {
@@ -53,52 +56,158 @@
 .close-btn {
   background: none;
   border: none;
-  font-size: 32px;
   color: #999;
   cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  line-height: 1;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.3s;
 }
 
 .close-btn:hover {
   color: #333;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
-.members-list {
+/* Search container */
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #28a745;
+}
+
+/* Suggestions dropdown */
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
   max-height: 250px;
   overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  margin-top: -6px;
 }
 
-.member-item {
+.suggestion-item {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 8px;
+  padding: 12px;
+  cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
 }
 
-.member-item:last-child {
+.suggestion-item:last-child {
   border-bottom: none;
 }
 
-.member-item input[type="checkbox"] {
-  margin-left: 10px;
-  cursor: pointer;
+.suggestion-item:hover {
+  background-color: #f8f9fa;
 }
 
-.member-item label {
-  cursor: pointer;
-  margin: 0;
+.suggestion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.selected-count {
-  margin: 15px 0;
+.suggestion-info strong {
+  color: #333;
+  font-size: 15px;
+}
+
+.suggestion-email {
   color: #666;
+  font-size: 13px;
+}
+
+.add-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.add-btn:hover {
+  background-color: #218838;
+}
+
+/* Selected members */
+.selected-members {
+  margin-top: 20px;
+}
+
+.selected-members label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #555;
+}
+
+.members-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.member-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #e9f7ef;
+  color: #28a745;
+  padding: 8px 12px;
+  border-radius: 20px;
   font-size: 14px;
+  font-weight: 500;
+}
+
+.remove-chip-btn {
+  background: none;
+  border: none;
+  color: #28a745;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.remove-chip-btn:hover {
+  color: #dc3545;
 }
 
 .submit-btn {
@@ -112,6 +221,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin-top: 20px;
 }
 
 .submit-btn:hover {

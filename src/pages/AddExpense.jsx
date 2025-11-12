@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { X, Receipt, DollarSign } from 'lucide-react';
 import { eventsAPI, authAPI } from '../services/api';
 import './AddExpense.css';
 
@@ -32,40 +33,51 @@ const AddExpense = ({ event, expense, expenseIndex, onClose, onExpenseAdded }) =
     fetchUsers();
   }, []);
 
-  // If editing, populate the form with existing data
-  useEffect(() => {
-    if (isEditing && expense) {
-      setAmount(expense.amount.toString());
-      setCurrency(expense.currency);
-      setNote(expense.note || '');
+// If editing, populate the form with existing data
+useEffect(() => {
+  if (isEditing && expense) {
+    setAmount(expense.amount.toString());
+    setCurrency(expense.currency);
+    setNote(expense.note || '');
+    
+    // Populate participants from expense
+    console.log('Editing expense:', expense); // Debug log
+    const expenseParticipants = expense.participants || [];
+    const updatedParticipants = event.members.map(member => {
+      const existingParticipant = expenseParticipants.find(
+        p => p.user_id === member.user_id
+      );
       
-      // Populate participants from expense
-      const expenseParticipants = expense.participants || [];
-      const updatedParticipants = event.members.map(member => {
-        const existingParticipant = expenseParticipants.find(
-          p => p.user_id === member.user_id
-        );
+      if (existingParticipant) {
+        console.log('Found participant:', existingParticipant); // Debug log
         
-        if (existingParticipant) {
-          // Find the participant data with responsible_for and paid
-          // Since we stored it in the database, we need to get it from the raw expense
-          return {
-            email: member.email,
-            responsible_for: existingParticipant.responsible_for || existingParticipant.share || 0,
-            paid: existingParticipant.paid || 0
-          };
-        }
+        // Get the actual values from the participant
+        const responsibleFor = existingParticipant.responsible_for !== undefined 
+          ? existingParticipant.responsible_for 
+          : (existingParticipant.share || 0);
+        
+        const paid = existingParticipant.paid !== undefined 
+          ? existingParticipant.paid 
+          : 0;
         
         return {
           email: member.email,
-          responsible_for: 0,
-          paid: 0
+          responsible_for: responsibleFor,
+          paid: paid
         };
-      });
+      }
       
-      setParticipants(updatedParticipants);
-    }
-  }, [isEditing, expense, event.members]);
+      return {
+        email: member.email,
+        responsible_for: 0,
+        paid: 0
+      };
+    });
+    
+    console.log('Updated participants:', updatedParticipants); // Debug log
+    setParticipants(updatedParticipants);
+  }
+}, [isEditing, expense, event.members]);
 
   // Get user name from email
   const getUserName = (email) => {
@@ -166,7 +178,7 @@ const AddExpense = ({ event, expense, expenseIndex, onClose, onExpenseAdded }) =
       <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>{isEditing ? 'Edit Expense' : 'Add Expense'}</h2>
-          <button onClick={onClose} className="close-btn">×</button>
+          <button onClick={onClose} className="close-btn"><X size={24} /></button>
         </div>
 
         {error && <div className="error-message">{error}</div>}
