@@ -40,7 +40,7 @@ const ExpenseDetails = ({ expense, event, onClose }) => {
     // For now, we'll work with what we have
     // In a real scenario, we'd want the backend to return this info
     
-    return expense.participants?.filter(p => p.share > 0).map(p => ({
+    return expense.participants?.filter(p => p.share >= 0).map(p => ({
       name: getUserName(p.user_id),
       share: p.share,
       // These would ideally come from the backend

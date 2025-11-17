@@ -95,8 +95,8 @@ const EventsList = () => {
               <h3>{event.name}</h3>
               <div className="event-info">
                 <p><strong>Members:</strong> {event.members?.length || 0}</p>
-                <p><strong>Expenses:</strong> {event.expenses?.length || 0}</p>
-                <p><strong>Total:</strong> {event.base_currency} {event.total_expenses?.toFixed(2) || '0.00'}</p>
+                <p><strong>Expenses:</strong> {event.expenses_count || 0}</p>
+                
               </div>
               <div className="event-date">
                 Created: {new Date(event.created_at).toLocaleDateString()}
