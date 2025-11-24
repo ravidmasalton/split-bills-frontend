@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://split-bills-5224.onrender.com';
+const API_URL = 'https://split-bills-production.up.railway.app/';
 
 const api = axios.create({
   baseURL: API_URL,
